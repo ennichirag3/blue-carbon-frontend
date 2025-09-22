@@ -62,12 +62,20 @@
         }
 
         .back-link {
-            display: block;
+            display: inline-block;
             text-align: center;
             margin-top: 25px;
             text-decoration: none;
             font-weight: 600;
-            color: #2e7d32;
+            color: #fff;
+            background: #2e7d32;
+            padding: 10px 20px;
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+
+        .back-link:hover {
+            background: #1b4f20;
         }
     </style>
 </head>
@@ -92,6 +100,7 @@
                 </tbody>
             </table>
 
+            <!-- Fixed Back to Dashboard link -->
             <a href="dashboard.html" class="back-link">← Back to Dashboard</a>
         </div>
     </div>
@@ -113,18 +122,8 @@
                 }
 
                 users.forEach(u => {
-                    // Mask email with *** in the middle
-                    let email = u.email;
-                    const [local, domain] = email.split("@");
-                    let maskedLocal;
-                    if (local.length <= 3) {
-                        maskedLocal = local[0] + "***";
-                    } else {
-                        const start = local.slice(0, 2);
-                        const end = local.slice(-1);
-                        maskedLocal = `${start}***${end}`;
-                    }
-                    const maskedEmail = `${maskedLocal}@${domain}`;
+                    const [local, domain] = u.email.split("@");
+                    const maskedEmail = local.length > 2 ? `${local.slice(0,2)}***${local.slice(-1)}@${domain}` : `${local[0]}***@${domain}`;
 
                     const tr = document.createElement("tr");
                     tr.innerHTML = `
@@ -137,8 +136,8 @@
 
             } catch (err) {
                 console.error("Error fetching users:", err);
-                const tbody = document.getElementById("usersTableBody");
-                tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:red;">Failed to load users</td></tr>`;
+                document.getElementById("usersTableBody").innerHTML =
+                    `<tr><td colspan="3" style="text-align:center; color:red;">Failed to load users</td></tr>`;
             }
         }
 
